@@ -76,7 +76,7 @@ def distance_wrap(resample,resample_end=-1,cfgpp=False):
 class SamplerDistanceAdvanced:
     @classmethod
     def INPUT_TYPES(s):
-        return {"required": {"resample": ("INT", {"default": 3, "min": -2, "max": 32, "step": 1,
+        return {"required": {"resample": ("INT", {"default": 3, "min": -1, "max": 32, "step": 1,
                                                   "tooltip":"0 all along gives Euler. 1 gives Heun.\nAnything starting from 2 will use the distance method.\n-1 will do remaining steps + 1 as the resample value. This can be pretty slow."}),
                              "resample_end": ("INT", {"default": -1, "min": -1, "max": 32, "step": 1, "tooltip":"How many resamples for the end. -1 means constant."}),
                              "cfgpp" : ("BOOLEAN", {"default": True}),
