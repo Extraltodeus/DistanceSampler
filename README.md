@@ -1,5 +1,5 @@
 # DistanceSampler
-Heuristic modification of the Heun sampler using normalized distances.
+Heuristic modification of the Heun sampler using a custom function based on normalized distances.
 
 No readme yet but you can try already.
 
