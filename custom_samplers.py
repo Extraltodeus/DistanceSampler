@@ -4,11 +4,11 @@ import comfy.model_patcher
 import comfy.samplers
 
 @torch.no_grad()
-def fast_distance_weights(t):
+def fast_distance_weights(t,p):
     d = torch.zeros_like(t,device=t.device)
     for i in range(t.shape[0]):
         d[i] = (t - t[i]).abs().sum(dim=0)
-    d = (1 - (d - d.min()) / (d.max() - d.min())).pow(t.shape[0] + 1)
+    d = (1 - (d - d.min()) / (d.max() - d.min())).pow(p)
     d = torch.nan_to_num(d,nan=1,neginf=1,posinf=1)
     d = (d / d.sum(dim=0))
     return (d * t).sum(dim=0)
@@ -69,7 +69,7 @@ def distance_wrap(resample,resample_end=-1,cfgpp=False):
                     if re_step == 0:
                         d = (new_d + d) / 2
                     else:
-                        d = fast_distance_weights(torch.stack(x_n))
+                        d = fast_distance_weights(torch.stack(x_n), re_step + 2)
                         x_n.append(d)
                 x = x + d * dt
         return x
