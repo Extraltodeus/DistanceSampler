@@ -11,6 +11,4 @@ Includes a "Heun CFG++" using the [alternative Euler CFGpp version found in Comf
 
 This may or may not be a correct implementation but the results are too good to be ignored.
 
-"fast_3" and "constant_2" are the best speed/quality deals.
-
 the file "presets_to_add" can be easily edited to add/remove presets to the list.
