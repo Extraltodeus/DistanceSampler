@@ -29,9 +29,10 @@ def distance_wrap(resample,resample_end=-1,cfgpp=False):
 
         s_min, s_max = sigmas[sigmas > 0].min(), sigmas.max()
         progression = lambda x: max(0,min(1,((x - s_min) / (s_max - s_min)) ** 0.5))
+        # progression = lambda x: max(0,min(1,((x - s_min) / (s_max - s_min))))
 
         if resample == -1:
-            current_resample = sigmas.shape[0]
+            current_resample = min(10, sigmas.shape[0] // 2)
         else:
             current_resample = resample
 
