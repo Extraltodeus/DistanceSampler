@@ -30,6 +30,11 @@ def distance_wrap(resample,resample_end=-1,cfgpp=False):
         s_min, s_max = sigmas[sigmas > 0].min(), sigmas.max()
         progression = lambda x: max(0,min(1,((x - s_min) / (s_max - s_min)) ** 0.5))
 
+        if resample == -1:
+            current_resample = sigmas.shape[0]
+        else:
+            current_resample = resample
+
         s_in = x.new_ones([x.shape[0]])
         for i in trange(len(sigmas) - 1, disable=disable):
             sigma_hat = sigmas[i]
@@ -46,9 +51,9 @@ def distance_wrap(resample,resample_end=-1,cfgpp=False):
 
             if resample_end >= 0:
                 res_mul = progression(sigma_hat)
-                resample_steps = max(min(resample,resample_end),min(max(resample,resample_end),int(resample * res_mul + resample_end * (1 - res_mul))))
+                resample_steps = max(min(current_resample,resample_end),min(max(current_resample,resample_end),int(current_resample * res_mul + resample_end * (1 - res_mul))))
             else:
-                resample_steps = resample
+                resample_steps = current_resample
 
             if sigmas[i + 1] == 0 or resample_steps == 0:
                 # Euler method
@@ -71,8 +76,8 @@ def distance_wrap(resample,resample_end=-1,cfgpp=False):
 class SamplerDistanceAdvanced:
     @classmethod
     def INPUT_TYPES(s):
-        return {"required": {"resample": ("INT", {"default": 3, "min": 0, "max": 32, "step": 1,
-                                                  "tooltip":"0 all along gives Euler. 1 gives Heun.\nAnything starting from 2 will use the distance method."}),
+        return {"required": {"resample": ("INT", {"default": 3, "min": -2, "max": 32, "step": 1,
+                                                  "tooltip":"0 all along gives Euler. 1 gives Heun.\nAnything starting from 2 will use the distance method.\n-1 will do remaining steps + 1 as the resample value. This can be pretty slow."}),
                              "resample_end": ("INT", {"default": -1, "min": -1, "max": 32, "step": 1, "tooltip":"How many resamples for the end. -1 means constant."}),
                              "cfgpp" : ("BOOLEAN", {"default": True}),
                              }}
