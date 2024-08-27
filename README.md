@@ -11,4 +11,4 @@ Includes a "Heun CFG++" using the [alternative Euler CFGpp version found in Comf
 
 This may or may not be a correct implementation but the results are too good to be ignored.
 
-the file "presets_to_add" can be easily edited to add/remove presets to the list.
+the file "presets_to_add" can be easily edited to add/remove presets to the list. Some have been commented out so to not overfill the list.
