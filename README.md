@@ -1,7 +1,7 @@
 # DistanceSampler
 Heuristic modification of the Heun sampler using a custom function based on normalized distances.
 
-No readme yet but you can try already.
+WIP / No readme yet but you can try already.
 
 Work better with little amounts of steps. Starting at 4, recommanded 10. CFG at 1.0 with 4-8 steps can give interesting results.
 
