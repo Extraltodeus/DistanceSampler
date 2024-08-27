@@ -3,13 +3,6 @@ from comfy.k_diffusion.sampling import trange, to_d
 import comfy.model_patcher
 import comfy.samplers
 
-"""
-I wrote this logic initially to merge models.
-If you want to use this for that, I do not recommand to subtract
-the entire batch at once but to iterate manually unless you have
-a ton of memory.
-"""
-
 @torch.no_grad()
 def fast_distance_weights(t,p=2):
     d = torch.zeros_like(t,device=t.device)
