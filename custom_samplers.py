@@ -4,7 +4,7 @@ import comfy.model_patcher
 import comfy.samplers
 
 @torch.no_grad()
-def fast_distance_weights(t,p=2):
+def fast_distance_weights(t,p):
     d = torch.zeros_like(t,device=t.device)
     for i in range(t.shape[0]):
         d[i] = (t - t[i]).abs().sum(dim=0)
