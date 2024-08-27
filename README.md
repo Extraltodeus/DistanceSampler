@@ -3,7 +3,7 @@ Heuristic modification of the Heun sampler using normalized distances.
 
 No readme yet but you can try already.
 
-Work better with little amounts of steps. Starting at 4, recommanded 10.
+Work better with little amounts of steps. Starting at 4, recommanded 10. CFG at 1.0 with 4-8 steps can give interesting results.
 
 Using AYS/AYS30/Simple/Karras for the schedulers.
 
