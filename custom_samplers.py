@@ -80,7 +80,7 @@ class SamplerDistanceAdvanced:
     def INPUT_TYPES(s):
         return {"required": {"resample": ("INT", {"default": 3, "min": 0, "max": 128, "step": 1,
                                                   "tooltip":"0 all along gives Euler. 1 gives Heun.\nAnything starting from 2 will use the distance method."}),
-                             "resample_end": ("INT", {"default": -1, "min": 0, "max": 32, "step": 1, "tooltip":"How many resamples for the end. -1 means constant."}),
+                             "resample_end": ("INT", {"default": -1, "min": -1, "max": 32, "step": 1, "tooltip":"How many resamples for the end. -1 means constant."}),
                              "cfgpp" : ("BOOLEAN", {"default": True}),
                              }}
     RETURN_TYPES = ("SAMPLER",)
