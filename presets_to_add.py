@@ -16,7 +16,7 @@ cfgpp will determin if you want it or not. True or False.
 """
 
 extra_samplers["distance_fast"] = distance_wrap(resample=3,resample_end=1,cfgpp=False) # s3e1
-extra_samplers["distance_step_e0"] = distance_wrap(resample=-1,resample_end=0,cfgpp=False)
+
 extra_samplers["distance_step_e1"] = distance_wrap(resample=-1,resample_end=1,cfgpp=False)
 
 # extra_samplers["distance_s4e0"] = distance_wrap(resample=4,resample_end=0,cfgpp=False)
