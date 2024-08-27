@@ -26,6 +26,7 @@ extra_samplers["distance_fast"] = distance_wrap(resample=3,resample_end=1,cfgpp=
 extra_samplers["distance_c2"] = distance_wrap(resample=2,resample_end=-1,cfgpp=False)
 extra_samplers["distance_c3"] = distance_wrap(resample=3,resample_end=-1,cfgpp=False)
 extra_samplers["distance_c4"] = distance_wrap(resample=4,resample_end=-1,cfgpp=False)
+
 extra_samplers["distance_c2_cfg_pp"] = distance_wrap(resample=2,resample_end=-1,cfgpp=True)
 extra_samplers["distance_fast_cfg_pp"] = distance_wrap(resample=3,resample_end=1,cfgpp=True)
 extra_samplers["heun_cfg_pp"] = distance_wrap(resample=1,cfgpp=True)
