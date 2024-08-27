@@ -69,7 +69,7 @@ def distance_wrap(resample,resample_end=-1,cfgpp=False):
                     if re_step == 0:
                         d = (new_d + d) / 2
                     else:
-                        d = fast_distance_weights(torch.stack(x_n), re_step + 1)
+                        d = fast_distance_weights(torch.stack(x_n), re_step + 2)
                         x_n.append(d)
                 x = x + d * dt
         return x
