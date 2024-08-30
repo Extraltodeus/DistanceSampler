@@ -16,15 +16,12 @@ cfgpp will determin if you want it or not. True or False.
 """
 
 extra_samplers["distance_fast"] = distance_wrap(resample=3,resample_end=1,cfgpp=False) # s3e1
-extra_samplers["distance_c2"] = distance_wrap(resample=2,resample_end=-1,cfgpp=False)
-extra_samplers["distance_c3"] = distance_wrap(resample=3,resample_end=-1,cfgpp=False)
 extra_samplers["distance_s4e1"] = distance_wrap(resample=4,resample_end=1,cfgpp=False)
-extra_samplers["distance_s6e1"] = distance_wrap(resample=6,resample_end=1,cfgpp=False)
 # extra_samplers["distance_step1"] = distance_wrap(resample=-1,resample_end=1,cfgpp=False)
 # extra_samplers["distance_step0"] = distance_wrap(resample=-1,resample_end=1,cfgpp=False)
 
-extra_samplers["distance_fast_cfg_pp"] = distance_wrap(resample=3,resample_end=0,cfgpp=True)
-extra_samplers["distance_s4e0_cfg_pp"] = distance_wrap(resample=4,resample_end=0,cfgpp=True)
+extra_samplers["distance_fast_cfg_pp"] = distance_wrap(resample=3,resample_end=1,cfgpp=True)
+extra_samplers["distance_s4e1_cfg_pp"] = distance_wrap(resample=4,resample_end=1,cfgpp=True)
 # extra_samplers["distance_c2_cfg_pp"] = distance_wrap(resample=2,resample_end=-1,cfgpp=True)
 # extra_samplers["distance_step_cfg_pp"] = distance_wrap(resample=-1,resample_end=1,cfgpp=True)
 
