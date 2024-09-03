@@ -1,7 +1,9 @@
 # DistanceSampler
 Heuristic modification of the Heun sampler using a custom function based on normalized distances. For ComfyUI.
 
-Work better with little amounts of steps. Starting at 4, recommanded 10. CFG at 1.0 with 4-8 steps can give interesting results.
+Work better with little amounts of steps. Starting at 4, recommanded 10. CFG scale at 8.
+
+A CFG at 1.0 with 4-8 steps can also give interesting results.
 
 Using AYS/AYS30/Simple/Karras for the schedulers.
 
