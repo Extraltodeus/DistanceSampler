@@ -11,4 +11,5 @@ Also includes a "Heun CFG++" using the [alternative Euler CFGpp version found in
 
 The file "presets_to_add" can be easily edited to add/remove presets to the list.
 
-The presets are about how many times it will sample per step, either start high (s) and end low (e) so "s4e1" means 4 at start, 1 at the end (which gives Heun).
+The presets are about how many times it will sample per step, like start high (s) and end low (e) so "s4e1" means 4 at start, 1 at the end (which gives Heun).
+
