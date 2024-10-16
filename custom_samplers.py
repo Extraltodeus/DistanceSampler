@@ -4,14 +4,15 @@ import comfy.model_patcher
 import comfy.samplers
 
 @torch.no_grad()
-def fast_distance_weights(t,p):
-    d = torch.zeros_like(t,device=t.device)
-    for i in range(t.shape[0]):
-        d[i] = (t - t[i]).abs().sum(dim=0)
-    d = (1 - (d - d.min()) / (d.max() - d.min())).pow(p)
-    d = torch.nan_to_num(d,nan=1,neginf=1,posinf=1)
-    d = (d / d.sum(dim=0))
-    return (d * t).sum(dim=0)
+def fast_distance_weights(t):
+    z = t / t.norm()
+    distances = (z.unsqueeze(0) - z.unsqueeze(1)).abs().sum(dim=0)
+    distances = 1 - (distances - distances.min(dim=0).values) / (distances.max(dim=0).values - distances.min(dim=0).values)
+    distances[~torch.isfinite(distances)] = 1
+    distances = distances.pow(t.shape[0])
+    distances = distances / distances.sum(dim=0)
+    res = (t * distances).sum(dim=0)
+    return res
 
 # Euler and CFGpp part taken from comfy_extras/nodes_advanced_samplers
 def distance_wrap(resample,resample_end=-1,cfgpp=False):
@@ -69,7 +70,7 @@ def distance_wrap(resample,resample_end=-1,cfgpp=False):
                     if re_step == 0:
                         d = (new_d + d) / 2
                     else:
-                        d = fast_distance_weights(torch.stack(x_n), re_step + 2)
+                        d = fast_distance_weights(torch.stack(x_n))
                         x_n.append(d)
                 x = x + d * dt
         return x
@@ -80,7 +81,7 @@ class SamplerDistanceAdvanced:
     def INPUT_TYPES(s):
         return {"required": {"resample": ("INT", {"default": 3, "min": -1, "max": 32, "step": 1,
                                                   "tooltip":"0 all along gives Euler. 1 gives Heun.\nAnything starting from 2 will use the distance method.\n-1 will do remaining steps + 1 as the resample value. This can be pretty slow."}),
-                             "resample_end": ("INT", {"default": 1, "min": -1, "max": 32, "step": 1, "tooltip":"How many resamples for the end. -1 means constant."}),
+                             "resample_end": ("INT", {"default": -1, "min": -1, "max": 32, "step": 1, "tooltip":"How many resamples for the end. -1 means constant."}),
                              "cfgpp" : ("BOOLEAN", {"default": True}),
                              }}
     RETURN_TYPES = ("SAMPLER",)
