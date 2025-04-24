@@ -1,7 +1,7 @@
 [project]
 name = "distancesampler"
 description = "Heuristic modification of the Heun sampler using a custom function based on normalized distances. For ComfyUI."
-version = "1.0.0"
+version = "2.0.0"
 license = {file = "LICENSE"}
 
 [project.urls]
