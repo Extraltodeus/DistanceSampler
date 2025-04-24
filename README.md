@@ -40,6 +40,10 @@ DPM++SDE (gpu), 14 steps:
 
 ![dpmppsder_14steps](https://github.com/user-attachments/assets/8a7eab3d-8948-4df6-b51a-8f456ecc6980)
 
+
+## Disabled Guidance (CFG=1)
+
+
 CFG scale at 1 on a normal SDXL model (works for simple subjects):
 
 ![ComfyUI_00645_](https://github.com/user-attachments/assets/c9676d09-2c66-4d48-86b0-f0cc7c82569c)
