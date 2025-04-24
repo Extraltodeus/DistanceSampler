@@ -18,7 +18,7 @@ The variation having a "n" in the name stands for "negative" and makes use of th
 
 The "p" variation uses a comparison with each previous step so to enhance the result. In general things become smoother / less messy.
 
-Examples below using the beta scheduler. The amount of steps has been adjusted to match the duration has this sampler is quite slow, yet requires little amounts of steps.
+Examples below using the beta scheduler. **The amount of steps has been adjusted to match the duration** has this sampler is quite slow, yet requires little amounts of steps.
 
 left: Distance, 7 steps
 
