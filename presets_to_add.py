@@ -21,9 +21,10 @@ Other variables:
  - perp step: experimental, not yet recommanded.
 PerpStep is a test sampler, uncomment if you want to try.
 """
-
+# Codename is Distance_fast_slerp
+extra_samplers["Distance"] = distance_wrap(resample=3,resample_end=1,cfgpp=False,sharpen=False,use_slerp=True)
 # Codename is Distance_fast_slerp_n
-extra_samplers["Distance"] = distance_wrap(resample=3,resample_end=1,cfgpp=False,sharpen=False,use_slerp=True,use_negative=True)
+extra_samplers["Distance_n"] = distance_wrap(resample=3,resample_end=1,cfgpp=False,sharpen=False,use_slerp=True,use_negative=True)
 
 # extra_samplers["PerpStep"] = perp_step_wrap(s=0.5)
 # extra_samplers["euler_test"] = distance_wrap(resample=0,resample_end=-1)
