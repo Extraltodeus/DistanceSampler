@@ -40,7 +40,14 @@ DPM++SDE (gpu), 14 steps:
 
 CFG scale at 1 on a normal SDXL model (works for simple subjects):
 
-![ComfyUI_00645_](https://github.com/user-attachments/assets/c9676d09-2c66-4d48-86b0-f0cc7c82569c)![ComfyUI_00640_](https://github.com/user-attachments/assets/daf59ad3-4abf-4a0f-abdd-6e7cf423e6b7)
+![ComfyUI_00645_](https://github.com/user-attachments/assets/c9676d09-2c66-4d48-86b0-f0cc7c82569c)
+
+![ComfyUI_00640_](https://github.com/user-attachments/assets/daf59ad3-4abf-4a0f-abdd-6e7cf423e6b7)
 
 ![ComfyUI_00632_](https://github.com/user-attachments/assets/515ad683-d841-4c95-b452-9263fdeb46f1)
 
+Distance p with a CFG at 1:
+
+![ComfyUI_00695_](https://github.com/user-attachments/assets/4ff194ac-a0ad-4e10-9cd4-c8d6aa4e3d57)
+
+![ComfyUI_00692_](https://github.com/user-attachments/assets/a5bfc880-b7a3-45b3-867d-82ca7560bf34)
