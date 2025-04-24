@@ -1,5 +1,5 @@
 [project]
-name = "DistanceSampler"
+name = "distancesampler"
 description = "Heuristic modification of the Heun sampler using a custom function based on normalized distances. For ComfyUI."
 version = "2.0.0"
 license = {file = "LICENSE"}
@@ -10,5 +10,5 @@ Repository = "https://github.com/Extraltodeus/DistanceSampler"
 
 [tool.comfy]
 PublisherId = "extraltodeus"
-DisplayName = "DistanceSampler"
+DisplayName = "distancesampler"
 Icon = ""
