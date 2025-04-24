@@ -46,7 +46,7 @@ CFG scale at 1 on a normal SDXL model (works for simple subjects):
 
 ![ComfyUI_00632_](https://github.com/user-attachments/assets/515ad683-d841-4c95-b452-9263fdeb46f1)
 
-Distance p with a CFG at 1:
+Distance p with a CFG at 1 and 6 steps:
 
 ![ComfyUI_00695_](https://github.com/user-attachments/assets/4ff194ac-a0ad-4e10-9cd4-c8d6aa4e3d57)
 
