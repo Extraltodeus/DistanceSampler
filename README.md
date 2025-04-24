@@ -1,18 +1,44 @@
 # DistanceSampler
 
-Modification of the Heun sampler using a custom function based on normalized distances. For ComfyUI.
+A custom experimental sampler based on relative distances. The first few steps are slower and then the sampler accelerates (the end is made with Heun).
 
-Work better with little amounts of steps. Starting at 4, recommanded 10. CFG scale at 8.
+Pros:
 
-A CFG at 1.0 with 4-8 steps can also give interesting results.
+ - Less body horror / merged fused people
+ - Little steps required (4-10, recommanded general use: 7 with beta or AYS)
+ - Can sample simple subjects without unconditional prediction (meaning with a CFG scale at 1) with a good quality.
 
-Using AYS/AYS30/Simple/Karras for the schedulers.
+Cons:
 
-I recommand using the "fast" or the "s4e1" version with 10 steps [AYS30 scheduler](https://github.com/pamparamm/ComfyUI-ppm) and CFG scale at 8.
+ - Slow
 
-Also includes a "Heun CFG++" using the [alternative Euler CFGpp version found in ComfyUI](https://github.com/comfyanonymous/ComfyUI/blob/7df42b9a2364bae6822fbd9e9fa10cea2e319ba3/comfy_extras/nodes_advanced_samplers.py) slapped with the Heun part at the end. This may or may not be a correct implementation but the results are too good to be ignored.
+The variation having a "n" in the name stands for "negative" and makes use of the unconditional prediction so to determin the best output. The results may vary depending on your negative prompt. In general it seems to make less mistakes.
 
-The file "presets_to_add" can be easily edited to add/remove presets to the list.
+Examples below using the beta scheduler. The amount of steps has been adjusted to match the duration has this sampler is quite slow, yet requires little amounts of steps.
 
-The presets are about how many times it will sample per step, like start high (s) and end low (e) so "s4e1" means 4 at start, 1 at the end (1 gives Heun).
+left: Distance, 7 steps
+
+right: dpmpp2m, 20 steps
+
+![combined_side_by_side](https://github.com/user-attachments/assets/65a66eba-d038-45fc-9648-79084cc1e011)
+
+
+
+Distance, 10 steps:
+
+![distance_10_steps](https://github.com/user-attachments/assets/32d7cf21-4c6e-45e1-892f-adc08a0cfa49)
+
+Distance n, 10 steps:
+
+![distance_n_10_steps](https://github.com/user-attachments/assets/8d41657a-7e21-4909-b03f-01afa532edf7)
+
+DPM++SDE (gpu), 14 steps:
+
+![dpmppsder_14steps](https://github.com/user-attachments/assets/8a7eab3d-8948-4df6-b51a-8f456ecc6980)
+
+CFG scale at 1 on a normal SDXL model (works for simple subjects):
+
+![ComfyUI_00645_](https://github.com/user-attachments/assets/c9676d09-2c66-4d48-86b0-f0cc7c82569c)![ComfyUI_00640_](https://github.com/user-attachments/assets/daf59ad3-4abf-4a0f-abdd-6e7cf423e6b7)
+
+![ComfyUI_00632_](https://github.com/user-attachments/assets/515ad683-d841-4c95-b452-9263fdeb46f1)
 
