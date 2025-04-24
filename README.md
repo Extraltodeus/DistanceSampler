@@ -12,7 +12,7 @@ Pros:
 
 Cons:
 
- - Slow
+ - Slow, which is also a plus. Relax, the image is generating ⛱
 
 The variation having a "n" in the name stands for "negative" and makes use of the unconditional prediction so to determin the best output. The results may vary depending on your negative prompt. In general it seems to make less mistakes.
 
