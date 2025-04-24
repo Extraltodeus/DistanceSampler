@@ -20,7 +20,7 @@ The "p" variation uses a comparison with each previous step so to enhance the re
 
 ## Comparisons
 
-Examples below using the beta scheduler. **The amount of steps has been adjusted to match the duration** has this sampler is quite slow, yet requires little amounts of steps.
+Examples below are using the beta scheduler. **The amount of steps has been adjusted to match the duration** has this sampler is quite slow, yet requires little amounts of steps.
 
 left: Distance, 7 steps
 
