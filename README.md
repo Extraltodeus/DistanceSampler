@@ -14,6 +14,8 @@ Cons:
 
 The variation having a "n" in the name stands for "negative" and makes use of the unconditional prediction so to determin the best output. The results may vary depending on your negative prompt. In general it seems to make less mistakes.
 
+The "p" variation uses a comparison with each previous step so to enhance the result. In general things become smoother / less messy.
+
 Examples below using the beta scheduler. The amount of steps has been adjusted to match the duration has this sampler is quite slow, yet requires little amounts of steps.
 
 left: Distance, 7 steps
