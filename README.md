@@ -14,9 +14,11 @@ Cons:
 
  - Slow, which is also a plus. Relax, the image is generating ⛱
 
-The variation having a "n" in the name stands for "negative" and makes use of the unconditional prediction so to determin the best output. The results may vary depending on your negative prompt. In general it seems to make less mistakes.
+Variations:
 
-The "p" variation uses a comparison with each previous step so to enhance the result. In general things become smoother / less messy.
+ - The variation having a "n" in the name stands for "negative" and makes use of the unconditional prediction so to determin the best output. The results may vary depending on your negative prompt. In general it seems to make less mistakes.
+
+ - The "p" variation uses a comparison with each previous step so to enhance the result. In general things become smoother / less messy.
 
 ## Comparisons
 
