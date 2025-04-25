@@ -6,7 +6,7 @@ The idea is to get a more precise start since this is when most of the work is b
 
 Pros:
 
- - Less body horror / merged fused people. Especially with the "n" variation.
+ - Less body horror / merged fused people.
  - Little steps required (4-10, recommanded general use: 7 with beta or AYS)
  - Can sample simple subjects without unconditional prediction (meaning with a CFG scale at 1) with a good quality.
 
