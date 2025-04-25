@@ -26,18 +26,16 @@ def fast_distance_weights(t, use_softmax=False, use_slerp=False, uncond=None):
     tn = t.div(norm)
 
     distances = (tn.unsqueeze(0) - tn.unsqueeze(1)).abs().sum(dim=0)
+    distances = distances.max(dim=0, keepdim=True).values - distances
 
     if uncond != None:
         uncond = uncond.div(torch.linalg.matrix_norm(uncond, keepdim=True))
-        distances -= tn.sub(uncond).abs()
+        distances += tn.sub(uncond).abs().div(n)
 
     if use_softmax:
-        distances = distances.max(dim=0).values - distances
         distances = distances.mul(n).softmax(dim=0)
     else:
-        distances = 1 - (distances - distances.min(dim=0).values) / (distances.max(dim=0).values - distances.min(dim=0).values)
-        distances[~torch.isfinite(distances)] = 1
-        distances = distances.pow(2)
+        distances = distances.div(distances.max(dim=0).values).pow(2)
         distances = distances / distances.sum(dim=0)
 
     if use_slerp:
