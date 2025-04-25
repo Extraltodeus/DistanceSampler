@@ -16,7 +16,7 @@ Cons:
 
 Variations:
 
- - The variation having a "n" in the name stands for "negative" and makes use of the unconditional prediction so to determin the best output. The results may vary depending on your negative prompt. In general it seems to make less mistakes.
+ - The variation having a "n" in the name stands for "negative" and makes use of the unconditional prediction so to determin the best output. The results may vary depending on your negative prompt. In general it seems to make less mistakes. This is what I sample with in general.
 
  - The "p" variation uses a comparison with each previous step so to enhance the result. In general things become smoother / less messy.
 
