@@ -2,6 +2,8 @@
 
 (made using Gemini (and read by myself so you don't just hurt yourself reading potential garbage) and re-touched a little so it's readable)
 
+(formatting is hard)
+
 (I recommand to have the code on the side to follow)
 
 
