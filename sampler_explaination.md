@@ -1,6 +1,6 @@
 # **Explanation of a Custom Diffusion Model Sampling Method in ComfyUI**
 
-(made using Gemini and re-touched a little so it's readable)
+(made using Gemini (and read by myself so you don't just hurt yourself reading potential garbage) and re-touched a little so it's readable)
 
 
 The function _matrix\_batch\_slerp_ implements batched spherical linear interpolation (SLERP). SLERP is a technique used to interpolate between two points on a unit sphere along the great circle that connects them, maintaining a constant angular velocity. This is particularly useful for interpolating rotations or, more generally, directions in high-dimensional spaces. The function is decorated with @torch.no\_grad(), indicating that the operations within it should not be tracked for gradient computation, as it is likely used during inference or sampling. The function takes three arguments: t, which likely represents the original batch of tensors; tn, which is likely the normalized version of t; and w, which probably contains the weights or interpolation factors for each tensor in the batch.  
