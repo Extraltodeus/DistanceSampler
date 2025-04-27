@@ -22,7 +22,7 @@ Variations:
 
 Potential compatibility issue:
 
-If any error was to relate to tensors shape, uncomment these two lines in the "presets_to_add.py":
+If any error was to relate to tensors shape, uncomment these two lines in the file "presets_to_add.py":
 
     extra_samplers["Distance_fast"] = distance_wrap(resample=3,resample_end=1,cfgpp=False,sharpen=False)
     extra_samplers["Distance_fast_n"] = distance_wrap(resample=3,resample_end=1,cfgpp=False,sharpen=False,use_negative=True)
