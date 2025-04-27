@@ -64,7 +64,11 @@ If an unconditional tensor uncond is provided (which is relevant for Classifier-
 
     uncond = uncond.div(torch.linalg.matrix_norm(uncond, keepdim=True))
 
-Then, the distance of each normalized tensor tn from the normalized unconditional tensor is calculated and added to the existing distances: distances \+= tn.sub(uncond).abs().div(n). This step incorporates information about how far each conditional sample is from the unconditional sample into the weighting scheme.  
+Then, the distance of each normalized tensor tn from the normalized unconditional tensor is calculated and added to the existing distances:
+
+    distances += tn.sub(uncond).abs().div(n)
+    
+This step incorporates information about how far each conditional sample is from the unconditional sample into the weighting scheme.  
 
 The function then proceeds to normalize the distances to obtain weights. If use\_softmax is True, the softmax function is applied:
 
