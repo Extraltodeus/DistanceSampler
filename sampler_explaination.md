@@ -6,6 +6,7 @@
 
 (I recommand to have the code on the side to follow)
 
+---
 
 The function _matrix\_batch\_slerp_ implements batched spherical linear interpolation (SLERP). SLERP is a technique used to interpolate between two points on a unit sphere along the great circle that connects them, maintaining a constant angular velocity. This is particularly useful for interpolating rotations or, more generally, directions in high-dimensional spaces.
 
@@ -56,6 +57,8 @@ The final result is obtained by summing the interpolated values across the first
 This function essentially performs a smooth, spherical interpolation between multiple matrices in a batch, using the provided weights to determine the contribution of each interpolated direction.
 
 The exclusion of self-pairs in the dot product calculation indicates that the function is designed to aggregate or combine information from distinct entities within the batch.  
+
+---
 
 The fast\_distance\_weights function calculates weights for a batch of tensors based on their pairwise distances in a normalized space.
 
