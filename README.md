@@ -20,7 +20,7 @@ Variations:
 
  - The "p" variation uses a comparison with each previous step so to enhance the result. In general things become smoother / less messy.
 
-### Compatibility issue
+### potential compatibility issue
 
 If any error was to relate to tensors shape, uncomment these two lines in the "presets_to_add.py":
 
