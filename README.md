@@ -4,6 +4,8 @@ A custom experimental sampler based on relative distances. The first few steps a
 
 The idea is to get a more precise start since this is when most of the work is being done.
 
+[More explainations](https://github.com/Extraltodeus/DistanceSampler/blob/main/sampler_explaination.md)
+
 Pros:
 
  - Less body horror / merged fused people.
