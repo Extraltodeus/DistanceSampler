@@ -30,7 +30,7 @@ def fast_distance_weights(t, use_softmax=False, use_slerp=False, uncond=None):
 
     if uncond != None:
         uncond = uncond.div(torch.linalg.matrix_norm(uncond, keepdim=True))
-        distances += tn.sub(uncond).abs().div(n)
+        distances += tn.sub(uncond).abs() #.div(n)
 
     if use_softmax:
         distances = distances.mul(n).softmax(dim=0)
