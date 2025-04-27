@@ -10,7 +10,7 @@ The first step inside matrix\_batch\_slerp is the calculation of dot products be
 
     dots = torch.mul(tn.unsqueeze(0), tn.unsqueeze(1)).sum(dim=[-1,-2], keepdim=True).clamp(min=-1.0 + EPSILON, max=1.0 - EPSILON)
 
-tn.unsqueeze(0) and tn.unsqueeze(1) add dimensions to create all pairwise combinations for element-wise multiplication. The .sum(dim=\[-1,-2\], keepdim=True) operation then calculates the dot product between these pairs along their feature dimensions. The .clamp() operation ensures that the resulting dot product values stay within the range of \`\`, which is necessary for the subsequent acos() function. The dot product of two unit vectors is the cosine of the angle between them, so this step effectively calculates the cosine of the angles between all pairs of normalized tensors.  
+tn.unsqueeze(0) and tn.unsqueeze(1) add dimensions to create all pairwise combinations for element-wise multiplication. The .sum(dim=\[-1,-2\], keepdim=True) operation then calculates the dot product between these pairs along their feature dimensions. The .clamp() operation ensures that the resulting dot product values stay within the range of -1 to 1, which is necessary for the subsequent acos() function. The dot product of two unit vectors is the cosine of the angle between them, so this step effectively calculates the cosine of the angles between all pairs of normalized tensors.  
 
 Next, a mask is created to exclude the diagonal elements of the dot product matrix: 
 
