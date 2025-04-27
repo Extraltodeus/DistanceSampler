@@ -7,12 +7,21 @@
 (I recommand to have the code on the side to follow)
 
 
-The function _matrix\_batch\_slerp_ implements batched spherical linear interpolation (SLERP). SLERP is a technique used to interpolate between two points on a unit sphere along the great circle that connects them, maintaining a constant angular velocity. This is particularly useful for interpolating rotations or, more generally, directions in high-dimensional spaces. The function is decorated with @torch.no\_grad(), indicating that the operations within it should not be tracked for gradient computation, as it is likely used during inference or sampling. The function takes three arguments: t, which likely represents the original batch of tensors; tn, which is likely the normalized version of t; and w, which probably contains the weights or interpolation factors for each tensor in the batch.  
+The function _matrix\_batch\_slerp_ implements batched spherical linear interpolation (SLERP). SLERP is a technique used to interpolate between two points on a unit sphere along the great circle that connects them, maintaining a constant angular velocity. This is particularly useful for interpolating rotations or, more generally, directions in high-dimensional spaces.
+
+The function is decorated with @torch.no\_grad(), indicating that the operations within it should not be tracked for gradient computation, as it is likely used during inference or sampling. The function takes three arguments: t, which likely represents the original batch of tensors; tn, which is likely the normalized version of t; and w, which probably contains the weights or interpolation factors for each tensor in the batch.  
+
 The first step inside matrix\_batch\_slerp is the calculation of dot products between all pairs of normalized tensors in tn: 
 
     dots = torch.mul(tn.unsqueeze(0), tn.unsqueeze(1)).sum(dim=[-1,-2], keepdim=True).clamp(min=-1.0 + EPSILON, max=1.0 - EPSILON)
 
-tn.unsqueeze(0) and tn.unsqueeze(1) add dimensions to create all pairwise combinations for element-wise multiplication. The .sum(dim=\[-1,-2\], keepdim=True) operation then calculates the dot product between these pairs along their feature dimensions. The .clamp() operation ensures that the resulting dot product values stay within the range of -1 to 1, which is necessary for the subsequent acos() function. The dot product of two unit vectors is the cosine of the angle between them, so this step effectively calculates the cosine of the angles between all pairs of normalized tensors.  
+tn.unsqueeze(0) and tn.unsqueeze(1) add dimensions to create all pairwise combinations for element-wise multiplication.
+
+The .sum(dim=\[-1,-2\], keepdim=True) operation then calculates the dot product between these pairs along their feature dimensions.
+
+The .clamp() operation ensures that the resulting dot product values stay within the range of -1 to 1, which is necessary for the subsequent acos() function.
+
+The dot product of two unit vectors is the cosine of the angle between them, so this step effectively calculates the cosine of the angles between all pairs of normalized tensors.  
 
 Next, a mask is created to exclude the diagonal elements of the dot product matrix: 
 
@@ -22,7 +31,9 @@ torch.eye() creates an identity matrix, and the bitwise NOT operator \~ inverts 
 
     dots = dots[mask].reshape(A, B - 1, C, D, E)
 
-This step focuses the interpolation on the relationships between *different* tensors in the batch, not a tensor with itself. The dimensions of the dots tensor are then unpacked and reshaped to prepare for the SLERP calculation.  
+This step focuses the interpolation on the relationships between *different* tensors in the batch, not a tensor with itself.
+
+The dimensions of the dots tensor are then unpacked and reshaped to prepare for the SLERP calculation.  
 
 The angles between the normalized tensors are calculated using the arccosine function: omegas \= dots.acos(). The sine of these angles is then computed: 
 
@@ -32,13 +43,25 @@ The core of the SLERP implementation follows:
 
     res = t.unsqueeze(1).repeat(1, B - 1, 1, 1, 1) * torch.sin(w.div(B - 1).unsqueeze(1).repeat(1, B - 1, 1, 1, 1) * omegas) / sin_omega
 
-This formula calculates a weighted sum based on the angles and the provided weights w. The original tensor t is prepared for batch interpolation by adding and repeating dimensions. The weights w are also manipulated to match the dimensions and are divided by B \- 1, suggesting a normalization of the weights across the other tensors in the batch. The final result is obtained by summing the interpolated values across the first two dimensions and then unsqueezing to restore the expected shape:
+This formula calculates a weighted sum based on the angles and the provided weights w.
+
+The original tensor t is prepared for batch interpolation by adding and repeating dimensions.
+
+The weights w are also manipulated to match the dimensions and are divided by B \- 1, suggesting a normalization of the weights across the other tensors in the batch.
+
+The final result is obtained by summing the interpolated values across the first two dimensions and then unsqueezing to restore the expected shape:
 
     res = res.sum(dim=).unsqueeze(0)
 
-This function essentially performs a smooth, spherical interpolation between multiple matrices in a batch, using the provided weights to determine the contribution of each interpolated direction. The exclusion of self-pairs in the dot product calculation indicates that the function is designed to aggregate or combine information from distinct entities within the batch.  
+This function essentially performs a smooth, spherical interpolation between multiple matrices in a batch, using the provided weights to determine the contribution of each interpolated direction.
 
-The fast\_distance\_weights function calculates weights for a batch of tensors based on their pairwise distances in a normalized space. It takes the input tensor t, boolean flags use\_softmax and use\_slerp, and an optional unconditional tensor uncond as arguments. The function begins by calculating the matrix norm of the input tensor t:
+The exclusion of self-pairs in the dot product calculation indicates that the function is designed to aggregate or combine information from distinct entities within the batch.  
+
+The fast\_distance\_weights function calculates weights for a batch of tensors based on their pairwise distances in a normalized space.
+
+It takes the input tensor t, boolean flags use\_softmax and use\_slerp, and an optional unconditional tensor uncond as arguments.
+
+The function begins by calculating the matrix norm of the input tensor t:
 
     norm = torch.linalg.matrix_norm(t, keepdim=True).
 
@@ -51,15 +74,19 @@ The input tensor is normalized by dividing it by its norm:
     tn = t.div(norm)
 
 This step projects the tensors onto a unit hypersphere.  
+
 Next, the function calculates a distance metric between all pairs of normalized tensors:
 
     distances = (tn.unsqueeze(0) - tn.unsqueeze(1)).abs().sum(dim=0)
 
-This involves creating all pairwise combinations, calculating the element-wise absolute difference, and then summing along the first dimension. This results in a measure of dissimilarity between each pair of normalized tensors. This distance is then transformed:
+This involves creating all pairwise combinations, calculating the element-wise absolute difference, and then summing along the first dimension.
+
+This results in a measure of dissimilarity between each pair of normalized tensors. This distance is then transformed:
 
     distances = distances.max(dim=0, keepdim=True).values - distances
 
 This operation inverts the distances, so that smaller original distances result in larger values after the subtraction.  
+
 If an unconditional tensor uncond is provided (which is relevant for Classifier-Free Guidance), it is also normalized:
 
     uncond = uncond.div(torch.linalg.matrix_norm(uncond, keepdim=True))
@@ -83,6 +110,7 @@ These squared values are then further normalized by dividing by their sum:
     distances = distances / distances.sum(dim=0).
 
 This provides an alternative way to obtain weights that sum to 1\.  
+
 Finally, the function combines the original tensors t using the calculated weights. If use\_slerp is True, the matrix\_batch\_slerp function is called:
 
     res = matrix_batch_slerp(t, tn, distances)
@@ -93,9 +121,17 @@ Otherwise, a simple weighted sum is performed, followed by a normalization and s
 
 This function provides a flexible way to compute weights based on the relationships between tensors and their proximity to an optional unconditional sample, and it offers a choice between spherical interpolation and a weighted sum for combining the tensors based on these weights. The inclusion of the uncond parameter strongly suggests a connection to Classifier-Free Guidance principles.  
 
-The distance\_wrap function acts as a decorator that takes several parameters to configure a custom sampling process. These parameters include resample, resample\_end, cfgpp, sharpen, use\_softmax, first\_only, use\_slerp, perp\_step, smooth, and use\_negative. These flags and integer values control various aspects of the sampling algorithm implemented in the inner function sample\_distance\_advanced. The decorator returns this inner function, effectively creating a customized sampling function based on the provided configuration.  
+The distance\_wrap function acts as a decorator that takes several parameters to configure a custom sampling process.
 
-The inner function sample\_distance\_advanced implements the core custom sampling logic. It takes the diffusion model (model), the initial noisy latent tensor (x), a tensor of noise levels (sigmas), optional extra arguments (extra\_args), a callback function (callback), and a disable flag for the progress bar (disable). It begins by initializing extra\_args if it's None and sets the unconditional output variable uncond to None.  
+These parameters include resample, resample\_end, cfgpp, sharpen, use\_softmax, first\_only, use\_slerp, perp\_step, smooth, and use\_negative.
+
+These flags and integer values control various aspects of the sampling algorithm implemented in the inner function sample\_distance\_advanced.
+
+The decorator returns this inner function, effectively creating a customized sampling function based on the provided configuration.  
+
+The inner function sample\_distance\_advanced implements the core custom sampling logic.
+
+It takes the diffusion model (model), the initial noisy latent tensor (x), a tensor of noise levels (sigmas), optional extra arguments (extra\_args), a callback function (callback), and a disable flag for the progress bar (disable). It begins by initializing extra\_args if it's None and sets the unconditional output variable uncond to None.  
 
 If either the cfgpp or use\_negative flag is True, the function defines an inner function post\_cfg\_function. This function is designed to capture the unconditional denoised output from the model after it has been called. It takes a dictionary of arguments and stores the unconditional denoised output in the uncond variable before returning the conditional denoised output. This mechanism is then integrated into the model's options within the ComfyUI framework using comfy.model\_patcher.set\_model\_options\_post\_cfg\_function. This setup allows the sampler to access the unconditional output needed for Classifier-Free Guidance or related techniques.  
 
