@@ -2,61 +2,7 @@
 
 (made using Gemini (and read by myself so you don't just hurt yourself reading potential garbage) and re-touched a little so it's readable)
 
-(formatting is hard)
-
-(I recommand to have the code on the side to follow)
-
----
-
-The function _matrix\_batch\_slerp_ implements batched spherical linear interpolation (SLERP). SLERP is a technique used to interpolate between two points on a unit sphere along the great circle that connects them, maintaining a constant angular velocity. This is particularly useful for interpolating rotations or, more generally, directions in high-dimensional spaces.
-
-The function is decorated with @torch.no\_grad(), indicating that the operations within it should not be tracked for gradient computation, as it is likely used during inference or sampling. The function takes three arguments: t, which likely represents the original batch of tensors; tn, which is likely the normalized version of t; and w, which probably contains the weights or interpolation factors for each tensor in the batch.  
-
-The first step inside matrix\_batch\_slerp is the calculation of dot products between all pairs of normalized tensors in tn: 
-
-    dots = torch.mul(tn.unsqueeze(0), tn.unsqueeze(1)).sum(dim=[-1,-2], keepdim=True).clamp(min=-1.0 + EPSILON, max=1.0 - EPSILON)
-
-tn.unsqueeze(0) and tn.unsqueeze(1) add dimensions to create all pairwise combinations for element-wise multiplication.
-
-The .sum(dim=\[-1,-2\], keepdim=True) operation then calculates the dot product between these pairs along their feature dimensions.
-
-The .clamp() operation ensures that the resulting dot product values stay within the range of -1 to 1, which is necessary for the subsequent acos() function.
-
-The dot product of two unit vectors is the cosine of the angle between them, so this step effectively calculates the cosine of the angles between all pairs of normalized tensors.  
-
-Next, a mask is created to exclude the diagonal elements of the dot product matrix: 
-
-    mask = ~torch.eye(tn.shape, dtype=torch.bool, device=tn.device)
-
-torch.eye() creates an identity matrix, and the bitwise NOT operator \~ inverts it, resulting in a mask where the diagonal elements are False and all others are True. This mask is then used to select only the off-diagonal elements from the dots tensor: 
-
-    dots = dots[mask].reshape(A, B - 1, C, D, E)
-
-This step focuses the interpolation on the relationships between *different* tensors in the batch, not a tensor with itself.
-
-The dimensions of the dots tensor are then unpacked and reshaped to prepare for the SLERP calculation.  
-
-The angles between the normalized tensors are calculated using the arccosine function: omegas \= dots.acos(). The sine of these angles is then computed: 
-
-    sin_omega = omegas.sin()
-
-The core of the SLERP implementation follows:
-
-    res = t.unsqueeze(1).repeat(1, B - 1, 1, 1, 1) * torch.sin(w.div(B - 1).unsqueeze(1).repeat(1, B - 1, 1, 1, 1) * omegas) / sin_omega
-
-This formula calculates a weighted sum based on the angles and the provided weights w.
-
-The original tensor t is prepared for batch interpolation by adding and repeating dimensions.
-
-The weights w are also manipulated to match the dimensions and are divided by B \- 1, suggesting a normalization of the weights across the other tensors in the batch.
-
-The final result is obtained by summing the interpolated values across the first two dimensions and then unsqueezing to restore the expected shape:
-
-    res = res.sum(dim=).unsqueeze(0)
-
-This function essentially performs a smooth, spherical interpolation between multiple matrices in a batch, using the provided weights to determine the contribution of each interpolated direction.
-
-The exclusion of self-pairs in the dot product calculation indicates that the function is designed to aggregate or combine information from distinct entities within the batch.  
+I recommand to have the code on the side to follow.
 
 ---
 
@@ -123,6 +69,60 @@ Otherwise, a simple weighted sum is performed, followed by a normalization and s
     res = (t * distances).sum(dim=0).unsqueeze(0); res = res.div(torch.linalg.matrix_norm(res, keepdim=True)).mul(norm.mul(distances).sum(dim=0).unsqueeze(0)).
 
 This function provides a flexible way to compute weights based on the relationships between tensors and their proximity to an optional unconditional sample, and it offers a choice between spherical interpolation and a weighted sum for combining the tensors based on these weights. The inclusion of the uncond parameter strongly suggests a connection to Classifier-Free Guidance principles.  
+
+---
+
+The function _matrix\_batch\_slerp_ implements batched spherical linear interpolation (SLERP). SLERP is a technique used to interpolate between two points on a unit sphere along the great circle that connects them, maintaining a constant angular velocity. This is particularly useful for interpolating rotations or, more generally, directions in high-dimensional spaces.
+
+The function is decorated with @torch.no\_grad(), indicating that the operations within it should not be tracked for gradient computation, as it is likely used during inference or sampling. The function takes three arguments: t, which likely represents the original batch of tensors; tn, which is likely the normalized version of t; and w, which probably contains the weights or interpolation factors for each tensor in the batch.  
+
+The first step inside matrix\_batch\_slerp is the calculation of dot products between all pairs of normalized tensors in tn: 
+
+    dots = torch.mul(tn.unsqueeze(0), tn.unsqueeze(1)).sum(dim=[-1,-2], keepdim=True).clamp(min=-1.0 + EPSILON, max=1.0 - EPSILON)
+
+tn.unsqueeze(0) and tn.unsqueeze(1) add dimensions to create all pairwise combinations for element-wise multiplication.
+
+The .sum(dim=\[-1,-2\], keepdim=True) operation then calculates the dot product between these pairs along their feature dimensions.
+
+The .clamp() operation ensures that the resulting dot product values stay within the range of -1 to 1, which is necessary for the subsequent acos() function.
+
+The dot product of two unit vectors is the cosine of the angle between them, so this step effectively calculates the cosine of the angles between all pairs of normalized tensors.  
+
+Next, a mask is created to exclude the diagonal elements of the dot product matrix: 
+
+    mask = ~torch.eye(tn.shape, dtype=torch.bool, device=tn.device)
+
+torch.eye() creates an identity matrix, and the bitwise NOT operator \~ inverts it, resulting in a mask where the diagonal elements are False and all others are True. This mask is then used to select only the off-diagonal elements from the dots tensor: 
+
+    dots = dots[mask].reshape(A, B - 1, C, D, E)
+
+This step focuses the interpolation on the relationships between *different* tensors in the batch, not a tensor with itself.
+
+The dimensions of the dots tensor are then unpacked and reshaped to prepare for the SLERP calculation.  
+
+The angles between the normalized tensors are calculated using the arccosine function: omegas \= dots.acos(). The sine of these angles is then computed: 
+
+    sin_omega = omegas.sin()
+
+The core of the SLERP implementation follows:
+
+    res = t.unsqueeze(1).repeat(1, B - 1, 1, 1, 1) * torch.sin(w.div(B - 1).unsqueeze(1).repeat(1, B - 1, 1, 1, 1) * omegas) / sin_omega
+
+This formula calculates a weighted sum based on the angles and the provided weights w.
+
+The original tensor t is prepared for batch interpolation by adding and repeating dimensions.
+
+The weights w are also manipulated to match the dimensions and are divided by B \- 1, suggesting a normalization of the weights across the other tensors in the batch.
+
+The final result is obtained by summing the interpolated values across the first two dimensions and then unsqueezing to restore the expected shape:
+
+    res = res.sum(dim=).unsqueeze(0)
+
+This function essentially performs a smooth, spherical interpolation between multiple matrices in a batch, using the provided weights to determine the contribution of each interpolated direction.
+
+The exclusion of self-pairs in the dot product calculation indicates that the function is designed to aggregate or combine information from distinct entities within the batch.  
+
+--- 
 
 The distance\_wrap function acts as a decorator that takes several parameters to configure a custom sampling process.
 
