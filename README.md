@@ -14,7 +14,7 @@ Pros:
 
 Cons:
 
- - Slow, which is also a plus. Relax, the image is generating ⛱
+ - Slow, which is also a plus. Relax, the image is generating ⛱ (but really since it requires little amounts of steps while giving a lesser percentage of horrors I personally prefer it)
 
 Variations:
 
