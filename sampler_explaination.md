@@ -22,7 +22,7 @@ The input tensor is normalized by dividing it by its norm:
 
     tn = t.div(norm)
 
-This step projects the tensors onto a unit hypersphere.  
+This step projects the tensors onto a unit hypersphere.  (Note from me: that's a super fancy way to say I divide by the radius, juste to ensure a similar scale, also usable by the slerp afterwards)
 
 Next, the function calculates a distance metric between all pairs of normalized tensors:
 
