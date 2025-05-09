@@ -4,6 +4,14 @@
 
 I recommand to have the code on the side to follow.
 
+But in short:
+
+Similarily to Heun's method or some other samplers, this sampler uses the last prediction to re-compute a new one.
+
+Here it loops and in each iteration uses the distances in between each values to create a new result.
+
+The new result is made from a weighted average (or a slerp using the same weights) where the weights are related to the proportions of proximity.
+
 ---
 
 The fast\_distance\_weights function calculates weights for a batch of tensors based on their pairwise distances in a normalized space.
