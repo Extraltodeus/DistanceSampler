@@ -24,7 +24,7 @@ The input tensor is normalized by dividing it by its norm:
 
 This step projects the tensors onto a unit hypersphere. 
 
-(Note from me: that's a super fancy way to say I divide by the norm/radius, juste to ensure a similar scale, also usable by the slerp after)
+(Note: that's a super fancy way to say I divide by the norm/radius, juste to ensure a similar scale, also usable by the slerp after)
 
 Next, the function calculates a distance metric between all pairs of normalized tensors:
 
