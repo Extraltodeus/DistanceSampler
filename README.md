@@ -22,7 +22,9 @@ Variations:
 
  - The "p" variation uses a comparison with each previous step so to enhance the result. In general things become smoother / less messy.
 
-Potential compatibility issue:
+---
+
+### Potential compatibility issue:
 
 If any error was to relate to tensors shape, uncomment these two lines in the file "presets_to_add.py":
 
@@ -30,6 +32,8 @@ If any error was to relate to tensors shape, uncomment these two lines in the fi
     extra_samplers["Distance_fast_n"] = distance_wrap(resample=3,resample_end=1,cfgpp=False,sharpen=False,use_negative=True)
 
 These are basically the same except they don't use a spherical interpolation at the end. The interpolation was made with latent spaces such as those used in Stable Diffusion in mind. These two alternatives use a weighted average instead (the difference is barely noticeable from my testing).
+
+---
 
 ## Comparisons
 
