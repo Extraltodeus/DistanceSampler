@@ -11,16 +11,28 @@ EPSILON = 1e-4
 def matrix_batch_slerp(t, tn, w):
     dots = torch.mul(tn.unsqueeze(0), tn.unsqueeze(1)).sum(dim=[-1,-2], keepdim=True).clamp(min=-1.0 + EPSILON, max=1.0 - EPSILON)
     mask = ~torch.eye(tn.shape[0], dtype=torch.bool, device=tn.device)
-    A, B, C, D, E = dots.shape
-    dots = dots[mask].reshape(A, B - 1, C, D, E)
+    A, B, *rest = dots.shape
+    rest_1s = (1,) * len(rest)
+    dots = dots[mask].reshape(A, B - 1, *rest)
     omegas = dots.acos()
     sin_omega = omegas.sin()
-    res = t.unsqueeze(1).repeat(1, B - 1, 1, 1, 1) * torch.sin(w.div(B - 1).unsqueeze(1).repeat(1, B - 1, 1, 1, 1) * omegas) / sin_omega
+    res = t.unsqueeze(1).repeat(1, B - 1, *rest_1s) * torch.sin(w.div(B - 1).unsqueeze(1).repeat(1, B - 1, *rest_1s) * omegas) / sin_omega
     res = res.sum(dim=[0, 1]).unsqueeze(0)
     return res
 
 @torch.no_grad()
 def fast_distance_weights(t, use_softmax=False, use_slerp=False, uncond=None):
+    orig_shape = t.shape[1:]
+    if t.shape[1] == 1 and t.ndim == 4:
+        t = t.squeeze(1)
+    elif t.ndim < 3:
+        raise ValueError("Can't handle input with dimensions < 3")
+    else:
+        t = t.reshape(t.shape[0], -1, *t.shape[-2 if t.ndim > 3 else -1:])
+        if t.ndim == 3:
+            t = t.unsqueeze(-1)
+        if uncond is not None:
+            uncond = uncond.reshape(1, *t.shape[1:])
     norm = torch.linalg.matrix_norm(t, keepdim=True)
     n  = t.shape[0]
     tn = t.div(norm)
@@ -43,7 +55,7 @@ def fast_distance_weights(t, use_softmax=False, use_slerp=False, uncond=None):
     else:
         res = (t * distances).sum(dim=0).unsqueeze(0)
         res = res.div(torch.linalg.matrix_norm(res, keepdim=True)).mul(norm.mul(distances).sum(dim=0).unsqueeze(0))
-    return res
+    return res if res.shape == orig_shape else res.reshape(orig_shape)
 
 @torch.no_grad()
 def normalize_adjust(a,b,strength=1):
@@ -127,7 +139,7 @@ def distance_wrap(resample,resample_end=-1,cfgpp=False,sharpen=False,use_softmax
                         d = (new_d + d) / 2
                     else:
                         u = uncond if (use_negative and uncond is not None and torch.any(uncond)) else None
-                        d = fast_distance_weights(torch.stack(x_n).squeeze(1), use_softmax=use_softmax, use_slerp=use_slerp, uncond=u)
+                        d = fast_distance_weights(torch.stack(x_n), use_softmax=use_softmax, use_slerp=use_slerp, uncond=u)
                         if sharpen or perp_step:
                             if sharpen and d_prev is not None:
                                 d = normalize_adjust(d, d_prev, 1)
