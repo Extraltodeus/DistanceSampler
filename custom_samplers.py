@@ -82,7 +82,6 @@ def get_ancestral_step_ext(sigma, sigma_next, eta=1.0, is_rf=False):
     sigma_down = sigma_next * downstep_ratio
     alpha_ip1, alpha_down = 1.0 - sigma_next, 1.0 - sigma_down
     sigma_up = (sigma_next**2 - sigma_down**2 * alpha_ip1**2 / alpha_down**2)**0.5
-    sigma_down_i_ratio = sigma_down / sigma
     x_coeff = alpha_ip1 / alpha_down
     return sigma_down, sigma_up, x_coeff
 
@@ -91,10 +90,10 @@ def internal_step(x, d, dt, sigma, sigma_next, sigma_up, x_coeff, noise_sampler)
     if sigma_up == 0 or noise_sampler is None:
         return x
     noise = noise_sampler(sigma, sigma_next).mul_(sigma_up)
-    if x_coeff == 1:
-        # Non-flow path.
-        return x.add_(noise)
-    return x.mul_(x_coeff).add_(noise)
+    if x_coeff != 1:
+        # x gets scaled for flow models.
+        x *= x_coeff
+    return x.add_(noise)
 
 def fix_step_range(steps, start, end):
     if start < 0:
