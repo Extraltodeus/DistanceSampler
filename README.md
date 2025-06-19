@@ -22,6 +22,13 @@ Variations:
 
  - The "p" variation uses a comparison with each previous step so to enhance the result. In general things become smoother / less messy.
 
+## New:
+
+ Thanks to [Blepping](https://github.com/blepping) there is now an ancestral version!
+
+ [More infos here](https://github.com/Extraltodeus/DistanceSampler/pull/7)
+
+
 ---
 
 ### Potential compatibility issue:
